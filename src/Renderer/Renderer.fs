@@ -153,7 +153,7 @@
                         SVGAttr.Width 75.
                         SVGAttr.Height 100.
                         SVGAttr.Fill color
-                        SVGAttr.Stroke color
+                        SVGAttr.Stroke "Black"
                         SVGAttr.StrokeWidth 1
                     ]
                     [ ]
