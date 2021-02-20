@@ -133,7 +133,7 @@
                     if props.Rectangle.IsDragging then
                         "green" 
                     else
-                        "grey"
+                        "lightgrey"
                 printfn "Rendering %d as %s" props.Index color
                 rect
                     [ 
