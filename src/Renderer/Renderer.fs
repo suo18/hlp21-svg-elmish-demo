@@ -16,8 +16,8 @@
             Y : float
         }
 
-    /// model type for a draggable circle
-    type Circle =
+    /// model type for a draggable rect
+    type Rectangle =
         {
             Pos: Coords
             LastMousePos : Coords
@@ -25,7 +25,7 @@
         }
 
 
-    type Model = Circle list
+    type Model = Rectangle list
 
 
     type Msg =
@@ -60,11 +60,11 @@
         match msg with
         | StartDragging (rank, pageX, pageY) ->
             currentModel
-            |> List.mapi (fun index circle ->
+            |> List.mapi (fun index rect ->
                 if rank <> index then
-                    circle
+                    rect
                 else
-                    { circle with
+                    { rect with
                         LastMousePos =
                             {
                                 X = pageX
@@ -77,16 +77,16 @@
 
         | Dragging (rank, mouseX, mouseY) ->
             currentModel
-            |> List.mapi (fun index circle ->
+            |> List.mapi (fun index rect ->
                 if rank <> index then
-                    circle
+                    rect
                 else
-                    let xDiff = mouseX - circle.LastMousePos.X 
-                    let yDiff = mouseY - circle.LastMousePos.Y 
-                    { circle with
+                    let xDiff = mouseX - rect.LastMousePos.X 
+                    let yDiff = mouseY - rect.LastMousePos.Y 
+                    { rect with
                         Pos = {
-                            X = circle.Pos.X + xDiff
-                            Y = circle.Pos.Y + yDiff
+                            X = rect.Pos.X + xDiff
+                            Y = rect.Pos.Y + yDiff
                         }
                         LastMousePos = {
                             X = mouseX
@@ -98,20 +98,20 @@
     
         | EndDragging rank ->
             currentModel
-            |> List.mapi (fun index circle ->
+            |> List.mapi (fun index rect ->
                 if rank <> index then 
-                    circle
+                    rect
                 else
-                    { circle with
+                    { rect with
                         IsDragging = false 
                     }
             )
             , Cmd.none
 
-    /// inputs needed to render a circle
+    /// inputs needed to render a rect
     type RenderCircleProps =
         {
-            Circle : Circle
+            Rectangle : Rectangle
             Index : int
             Dispatch : Dispatch<Msg>
             key : string
@@ -130,12 +130,12 @@
                     )
 
                 let color =
-                    if props.Circle.IsDragging then
-                        "red" 
+                    if props.Rectangle.IsDragging then
+                        "green" 
                     else
                         "grey"
                 printfn "Rendering %d as %s" props.Index color
-                circle
+                rect
                     [ 
                         OnMouseUp (fun ev -> 
                             document.removeEventListener("mousemove", handleMouseMove.current)
@@ -147,15 +147,17 @@
                             |> props.Dispatch
                             document.addEventListener("mousemove", handleMouseMove.current)
                         )
-                        Cx props.Circle.Pos.X
-                        Cy props.Circle.Pos.Y
-                        R 25.
+                        X props.Rectangle.Pos.X
+                        Y props.Rectangle.Pos.Y
+                        // R 25.
+                        SVGAttr.Width 75.
+                        SVGAttr.Height 100.
                         SVGAttr.Fill color
                         SVGAttr.Stroke color
                         SVGAttr.StrokeWidth 1
                     ]
                     [ ]
-        , "Circle"
+        , "Rectangle"
         , equalsButFunctions
         )
 
@@ -163,15 +165,15 @@
     let view (model : Model) (dispatch : Msg -> unit) =
         let handleSvgMouseEvent ev = ()
              
-        let circles =
+        let rectangles =
             model
-            |> List.mapi (fun index circle ->
+            |> List.mapi (fun index rect ->
                 renderCircle 
                     {
-                        Circle = circle
+                        Rectangle = rect
                         Index = index
                         Dispatch = dispatch
-                        key = "circle-" + string index
+                        key = "rect-" + string index
                     }
             )
            
@@ -185,7 +187,7 @@
                         Margin "10px"
                     ]
             ]
-            circles
+            rectangles
 
 
     // App
