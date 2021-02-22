@@ -22,6 +22,7 @@
             Pos: Coords
             LastMousePos : Coords
             IsDragging : bool
+
         }
 
 
@@ -41,11 +42,13 @@
                 Pos={X = 50. ; Y = 50.}
                 LastMousePos = initPos
                 IsDragging = false
+
             }
             { 
                 Pos ={X=150. ; Y=150.}
                 LastMousePos = initPos
                 IsDragging = false
+
             }
             { 
                 Pos ={X=100. ; Y=100.}
@@ -156,7 +159,7 @@
                         SVGAttr.Stroke "Black"
                         SVGAttr.StrokeWidth 1
                     ]
-                    [ ]
+                    [ ]             
         , "Rectangle"
         , equalsButFunctions
         )
